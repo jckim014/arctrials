@@ -965,14 +965,26 @@
 
 
 
-      window.addEventListener("load", () => {
+      function handleHash() {
         const hash = location.hash.slice(1);
-        if (!hash) return;
-        if (hash) {
-          planId = hash;
-          openPlan();
+        if (!hash) {
+          // No hash - go to home if not already there
+          if (unsubscribe) { unsubscribe(); unsubscribe = null; }
+          if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
+          planId = null; localState = null;
+          showScreen("home");
+          return;
         }
-      });
+        if (hash === planId) return; // same plan, do nothing
+        // New plan link pasted - clean up current and load new
+        if (unsubscribe) { unsubscribe(); unsubscribe = null; }
+        planId = hash;
+        localState = null;
+        openPlan();
+      }
+
+      window.addEventListener("load", handleHash);
+      window.addEventListener("hashchange", handleHash);
 
       // ── PLAN ─────────────────────────────────────────────────────────────────────
       function openPlan() {
