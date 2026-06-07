@@ -877,9 +877,9 @@
           .replace(/>/g, "&gt;")
           .replace(/"/g, "&quot;");
       }
-      function planLink() {
+      window.planLink = function planLink() {
         return `${location.origin}${location.pathname}#${planId}`;
-      }
+      };
 
       window.copyText = (text, btn) => {
         navigator.clipboard.writeText(text).then(() => {
