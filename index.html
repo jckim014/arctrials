@@ -755,7 +755,7 @@
           <div class="share-link" id="newplan-link"></div>
         </div>
         <button class="btn-sm green" style="width:100%;justify-content:center;padding:10px"
-          onclick="copyText(document.getElementById('newplan-link').textContent.trim())">
+          onclick="copyText(document.getElementById('newplan-link').textContent.trim(), this)">
           Copy link
         </button>
 
@@ -774,7 +774,7 @@
         <div class="modal-sub">Share this link with anyone who needs to join.</div>
         <div class="share-link" id="share-link-display"></div>
         <button class="btn-sm green" style="width:100%;justify-content:center;padding:10px"
-          onclick="copyText(planLink())">Copy link</button>
+          onclick="copyText(planLink(), this)">Copy link</button>
 
 
         <div class="modal-btns">
@@ -881,8 +881,20 @@
         return `${location.origin}${location.pathname}#${planId}`;
       }
 
-      window.copyText = (text) => {
-        navigator.clipboard.writeText(text).then(() => toast("Copied!"));
+      window.copyText = (text, btn) => {
+        navigator.clipboard.writeText(text).then(() => {
+          if (btn) {
+            const orig = btn.textContent;
+            btn.textContent = "Copied!";
+            btn.style.opacity = ".7";
+            setTimeout(() => {
+              btn.textContent = orig;
+              btn.style.opacity = "";
+            }, 1200);
+          } else {
+            toast("Copied!");
+          }
+        });
       };
 
       function toast(msg) {
