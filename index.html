@@ -773,8 +773,8 @@
         <div class="modal-title">Share this plan</div>
         <div class="modal-sub">Share this link with anyone who needs to join.</div>
         <div class="share-link" id="share-link-display"></div>
-        <button class="btn-sm green" style="width:100%;justify-content:center;padding:10px"
-          onclick="copyText(planLink(), this)">Copy link</button>
+        <button id="share-copy-btn" class="btn-sm green" style="width:100%;justify-content:center;padding:10px"
+          onclick="copyText(planLink(), document.getElementById('share-copy-btn'))">Copy link</button>
 
 
         <div class="modal-btns">
