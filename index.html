@@ -773,8 +773,7 @@
         <div class="modal-title">Share this plan</div>
         <div class="modal-sub">Share this link with anyone who needs to join.</div>
         <div class="share-link" id="share-link-display"></div>
-        <button id="share-copy-btn" class="btn-sm green" style="width:100%;justify-content:center;padding:10px"
-          onclick="copyText(planLink(), document.getElementById('share-copy-btn'))">Copy link</button>
+        <button id="share-copy-btn" class="btn-sm green" style="width:100%;justify-content:center;padding:10px">Copy link</button>
 
 
         <div class="modal-btns">
@@ -1115,8 +1114,9 @@
       // ── SHARE ─────────────────────────────────────────────────────────────────────
       window.showShare = () => {
         document.getElementById("share-link-display").textContent = planLink();
-
         document.getElementById("modal-share").classList.remove("hidden");
+        const copyBtn = document.getElementById("share-copy-btn");
+        copyBtn.onclick = () => copyText(planLink(), copyBtn);
       };
 
       // ── PLAYER POOL ───────────────────────────────────────────────────────────────
