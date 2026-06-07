@@ -505,21 +505,26 @@
         cursor: pointer;
         transition: color .15s;
       }
-      .slot-name:hover { color: var(--accent); }
       .copy-name-btn {
         background: none;
         border: none;
         cursor: pointer;
         color: var(--muted);
-        padding: 0 2px;
-        line-height: 0;
+        font-size: 11px;
+        font-family: var(--font);
+        padding: 1px 5px;
+        border-radius: 4px;
         flex-shrink: 0;
-        display: inline-flex;
-        align-items: center;
-        transition: color .15s;
+        line-height: 1.4;
+        transition: color .15s, background .15s;
+        white-space: nowrap;
       }
       .copy-name-btn:hover {
-        color: var(--accent);
+        color: var(--text);
+      }
+      .copy-name-btn.copied {
+        color: var(--success);
+        background: var(--success-dim);
       }
       .slot-rm {
         background: none;
@@ -1281,22 +1286,17 @@
       };
 
       // ── COPY SLOT NAME ───────────────────────────────────────────────────────────
-      const COPY_ICON = `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
-      const CHECK_ICON = `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>`;
-
       window.copySlotName = (name, el) => {
         navigator.clipboard.writeText(name).then(() => {
           const btn = el.classList.contains("copy-name-btn")
             ? el
             : el.parentElement && el.parentElement.querySelector(".copy-name-btn");
           if (btn) {
-            btn.innerHTML = CHECK_ICON;
-            btn.style.color = "var(--accent)";
-            btn.style.opacity = "1";
+            btn.textContent = "Copied!";
+            btn.classList.add("copied");
             setTimeout(() => {
-              btn.innerHTML = COPY_ICON;
-              btn.style.color = "";
-              btn.style.opacity = "";
+              btn.textContent = "Copy";
+              btn.classList.remove("copied");
             }, 1200);
           }
         });
@@ -1359,8 +1359,8 @@
                     ondragover="onSlotDragOver(event,'${g.id}',${i})"
                     ondragleave="onSlotDragLeave(event)"
                     ondrop="onGroupDrop(event,'${g.id}',${i})">
-                    <span class="slot-name" onclick="copySlotName('${esc(m)}', this)" title="Click to copy">${esc(m)}</span>
-                    <button class="copy-name-btn" onclick="copySlotName('${esc(m)}', this)" title="Copy name" aria-label="Copy name"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+                    <span class="slot-name" onclick="copySlotName('${esc(m)}', this)">${esc(m)}</span>
+                    <button class="copy-name-btn" onclick="copySlotName('${esc(m)}', this)" aria-label="Copy name">Copy</button>
                     <span style="flex:1"></span>
                     <button class="slot-rm" onclick="removeFromGroup('${g.id}','${esc(m)}')" aria-label="Remove">✕</button>
                   </div>`
