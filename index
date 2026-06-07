@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trials Signup</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #0d0d0d;
+        --surface: #161616;
+        --surface2: #1e1e1e;
+        --border: rgba(255, 255, 255, 0.08);
+        --border2: rgba(255, 255, 255, 0.14);
+        --text: #f0f0f0;
+        --muted: #888;
+        --accent: #c8f135;
+        --accent-dim: rgba(200, 241, 53, 0.12);
+        --danger: #ff5a5a;
+        --danger-dim: rgba(255, 90, 90, 0.1);
+        --info: #5ab4ff;
+        --info-dim: rgba(90, 180, 255, 0.1);
+        --success: #5affa0;
+        --success-dim: rgba(90, 255, 160, 0.1);
+        --warn: #ffb84d;
+        --warn-dim: rgba(255, 184, 77, 0.12);
+        --radius: 10px;
+        --font: "DM Sans", sans-serif;
+        --mono: "DM Mono", monospace;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font);
+        min-height: 100vh;
+      }
+      .screen {
+        display: none;
+        min-height: 100vh;
+      }
+      .screen.active {
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* HOME */
+      #home {
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+      }
+      .home-inner {
+        width: 100%;
+        max-width: 420px;
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+      }
+      .wordmark {
+        font-family: var(--mono);
+        font-size: 13px;
+        letter-spacing: 0.2em;
+        color: var(--accent);
+        text-transform: uppercase;
+      }
+      .home-title {
+        font-size: clamp(2.4rem, 6vw, 3.6rem);
+        font-weight: 300;
+        line-height: 1.1;
+      }
+      .home-title em {
+        font-style: normal;
+        color: var(--accent);
+      }
+      .home-sub {
+        font-size: 14px;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+      .divider {
+        height: 1px;
+        background: var(--border);
+      }
+      .home-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .btn-create {
+        background: var(--accent);
+        color: #0d0d0d;
+        border: none;
+        border-radius: var(--radius);
+        padding: 14px 20px;
+        font-family: var(--font);
+        font-size: 15px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: opacity 0.15s;
+      }
+      .btn-create:hover {
+        opacity: 0.88;
+      }
+      .home-err {
+        font-size: 12px;
+        color: var(--danger);
+        min-height: 16px;
+      }
+
+      /* EXPIRED */
+      #expired {
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        text-align: center;
+      }
+      .expired-inner {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.25rem;
+        max-width: 340px;
+      }
+      .expired-icon {
+        font-size: 3rem;
+      }
+      .expired-title {
+        font-size: 1.5rem;
+        font-weight: 300;
+      }
+      .expired-sub {
+        font-size: 14px;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      /* PLAN HEADER */
+      .plan-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 13px 20px;
+        border-bottom: 1px solid var(--border);
+        background: var(--surface);
+        flex-wrap: wrap;
+      }
+      .plan-wordmark {
+        font-family: var(--mono);
+        font-size: 11px;
+        letter-spacing: 0.2em;
+        color: var(--accent);
+        text-transform: uppercase;
+      }
+      .plan-title-display {
+        font-size: 1.5rem;
+        font-weight: 500;
+        color: var(--text);
+        line-height: 1.2;
+        padding-bottom: .5rem;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        min-height: 2rem;
+      }
+      .plan-title-display:not(:has(*)) { display: none; }
+      .title-name { cursor: pointer; transition: color .15s; }
+      .title-name:hover { color: var(--accent); }
+      .title-edit-btn {
+        background: none; border: none; cursor: pointer;
+        color: var(--muted); font-size: 14px; padding: 0 4px;
+        line-height: 1; flex-shrink: 0; transition: color .15s;
+      }
+      .title-edit-btn:hover { color: var(--accent); }
+      .spacer {
+        flex: 1;
+      }
+      .countdown {
+        font-family: var(--mono);
+        font-size: 12px;
+        padding: 4px 10px;
+        border-radius: 6px;
+        border: 1px solid var(--border2);
+        color: var(--muted);
+        background: var(--surface2);
+        letter-spacing: 0.05em;
+        white-space: nowrap;
+      }
+      .countdown.warn {
+        color: var(--warn);
+        border-color: rgba(255, 184, 77, 0.3);
+        background: var(--warn-dim);
+      }
+      .countdown.crit {
+        color: var(--danger);
+        border-color: rgba(255, 90, 90, 0.3);
+        background: var(--danger-dim);
+      }
+      .mode-badge {
+        font-size: 11px;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-weight: 500;
+        font-family: var(--mono);
+      }
+
+      .mode-badge.player {
+        background: var(--surface2);
+        color: var(--muted);
+        border: 1px solid var(--border);
+      }
+      .btn-sm {
+        font-size: 12px;
+        padding: 6px 12px;
+        border: 1px solid var(--border2);
+        border-radius: 8px;
+        background: var(--surface2);
+        color: var(--text);
+        cursor: pointer;
+        font-family: var(--font);
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        transition: border-color 0.15s, background 0.15s;
+        white-space: nowrap;
+      }
+      .btn-sm:hover {
+        background: var(--surface);
+      }
+      .btn-sm.red:hover {
+        border-color: var(--danger);
+        color: var(--danger);
+        background: var(--danger-dim);
+      }
+      .btn-sm.green {
+        border-color: rgba(200, 241, 53, 0.3);
+        color: var(--accent);
+        background: var(--accent-dim);
+      }
+      .btn-sm.green:hover {
+        opacity: 0.85;
+      }
+      .btn-home {
+        font-size: 12px;
+        padding: 6px 10px;
+        border: none;
+        background: none;
+        color: var(--muted);
+        cursor: pointer;
+        font-family: var(--font);
+      }
+      .btn-home:hover {
+        color: var(--text);
+      }
+
+      /* PLAN BODY */
+      .plan-body {
+        display: grid;
+        grid-template-columns: 220px 1fr;
+        gap: 0;
+        flex: 1;
+        min-height: calc(100vh - 57px);
+      }
+      .sidebar {
+        border-right: 1px solid var(--border);
+        padding: 1.25rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        background: var(--surface);
+      }
+      .sidebar-label {
+        font-size: 10px;
+        font-weight: 500;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .pool-add {
+        display: flex;
+        gap: 6px;
+      }
+      .pool-add input {
+        flex: 1;
+        background: var(--surface2);
+        border: 1px solid var(--border2);
+        border-radius: 8px;
+        padding: 8px 10px;
+        color: var(--text);
+        font-family: var(--font);
+        font-size: 13px;
+        outline: none;
+        min-width: 0;
+        transition: border-color 0.15s;
+      }
+      .pool-add input:focus {
+        border-color: var(--accent);
+      }
+      .pool-add button {
+        background: var(--surface2);
+        border: 1px solid var(--border2);
+        border-radius: 8px;
+        padding: 8px 10px;
+        color: var(--accent);
+        cursor: pointer;
+        font-size: 16px;
+        transition: background 0.15s;
+      }
+      .pool-add button:hover {
+        background: var(--accent-dim);
+      }
+      .signup-err {
+        font-size: 11px;
+        color: var(--danger);
+        min-height: 14px;
+      }
+      .pool-list {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        flex: 1;
+        overflow-y: auto;
+      }
+      .chip {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 7px 10px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-size: 13px;
+        color: var(--text);
+        background: var(--surface2);
+        user-select: none;
+      }
+      .chip.draggable {
+        cursor: grab;
+        transition: border-color 0.15s, background 0.15s;
+      }
+      .chip.draggable:hover {
+        border-color: var(--border2);
+        background: var(--surface);
+      }
+      .chip.dragging {
+        opacity: 0.3;
+      }
+      .chip.assigned {
+        color: var(--muted);
+        border-style: dashed;
+      }
+      .chip-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--accent);
+        flex-shrink: 0;
+      }
+      .chip.assigned .chip-dot {
+        background: var(--muted);
+      }
+      .chip-name {
+        flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .chip-rm {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--muted);
+        font-size: 14px;
+        padding: 0;
+        line-height: 1;
+      }
+      .chip-rm:hover {
+        color: var(--danger);
+      }
+      .unassigned-note {
+        font-size: 11px;
+        color: var(--muted);
+      }
+
+      .main-area {
+        padding: 1.25rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        overflow-y: auto;
+      }
+      .groups-toolbar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .groups-label {
+        font-size: 10px;
+        font-weight: 500;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--muted);
+        flex: 1;
+      }
+      .leader-tools {
+        display: none;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .groups-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+        gap: 10px;
+      }
+      .group-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 1rem;
+        min-height: 148px;
+        transition: border-color 0.15s, background 0.15s;
+      }
+      .group-card.drag-over {
+        border-color: var(--accent);
+        background: var(--accent-dim);
+      }
+      .group-card.full {
+        border-color: rgba(90, 255, 160, 0.2);
+      }
+      .gc-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 8px;
+      }
+      .gc-name {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text);
+      }
+      .gc-count {
+        font-size: 11px;
+        font-family: var(--mono);
+        background: var(--surface2);
+        border-radius: 20px;
+        padding: 2px 8px;
+        color: var(--muted);
+      }
+      .group-card.full .gc-count {
+        background: var(--success-dim);
+        color: var(--success);
+      }
+
+      .slot-list {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .slot {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 8px;
+        border-radius: 7px;
+        font-size: 13px;
+        min-height: 32px;
+      }
+      .slot.filled {
+        background: var(--surface2);
+        border: 1px solid var(--border);
+      }
+      .slot.filled.draggable {
+        cursor: grab;
+      }
+      .slot.filled.draggable:hover {
+        border-color: var(--border2);
+      }
+      .slot.filled.dragging {
+        opacity: 0.3;
+      }
+      .slot.drag-over-slot {
+        border-color: var(--accent);
+        background: var(--accent-dim);
+      }
+      .slot.empty {
+        border: 1px dashed var(--border);
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .slot-name {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        user-select: text;
+        cursor: pointer;
+        transition: color .15s;
+      }
+      .copy-name-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--muted);
+        font-size: 11px;
+        font-family: var(--font);
+        padding: 1px 5px;
+        border-radius: 4px;
+        flex-shrink: 0;
+        line-height: 1.4;
+        transition: color .15s, background .15s;
+        white-space: nowrap;
+      }
+      .copy-name-btn:hover {
+        color: var(--text);
+      }
+      .copy-name-btn.copied {
+        color: var(--success);
+        background: var(--success-dim);
+      }
+      .slot-rm {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--muted);
+        font-size: 12px;
+        padding: 0;
+        line-height: 1;
+      }
+      .slot-rm:hover {
+        color: var(--danger);
+      }
+      .full-label {
+        font-size: 11px;
+        color: var(--success);
+        text-align: center;
+        padding: 4px 0;
+        font-family: var(--mono);
+      }
+
+      /* MODALS */
+      .modal-bg {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.65);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 200;
+        backdrop-filter: blur(2px);
+      }
+      .modal-bg.hidden {
+        display: none;
+      }
+      .modal {
+        background: var(--surface);
+        border: 1px solid var(--border2);
+        border-radius: 14px;
+        padding: 1.5rem;
+        width: 340px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .modal-title {
+        font-size: 16px;
+        font-weight: 500;
+      }
+      .modal-sub {
+        font-size: 13px;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+      .modal input {
+        background: var(--surface2);
+        border: 1px solid var(--border2);
+        border-radius: 8px;
+        padding: 10px 12px;
+        color: var(--text);
+        font-family: var(--font);
+        font-size: 14px;
+        outline: none;
+        width: 100%;
+        transition: border-color 0.15s;
+      }
+      .modal input:focus {
+        border-color: var(--accent);
+      }
+      .modal-btns {
+        display: flex;
+        gap: 8px;
+        justify-content: flex-end;
+      }
+      .modal-err {
+        font-size: 12px;
+        color: var(--danger);
+        min-height: 16px;
+      }
+      .share-link {
+        font-family: var(--mono);
+        font-size: 11px;
+        color: var(--muted);
+        word-break: break-all;
+        text-align: center;
+        background: var(--surface2);
+        border-radius: 8px;
+        padding: 10px 12px;
+      }
+      .copy-row {
+        display: flex;
+        gap: 8px;
+      }
+      .copy-row button {
+        flex: 1;
+        justify-content: center;
+      }
+
+      .toast {
+        position: fixed;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--surface2);
+        border: 1px solid var(--border2);
+        border-radius: 8px;
+        padding: 10px 18px;
+        font-size: 13px;
+        color: var(--text);
+        opacity: 0;
+        transition: opacity 0.2s;
+        pointer-events: none;
+        z-index: 300;
+        font-family: var(--mono);
+        letter-spacing: 0.05em;
+        white-space: nowrap;
+      }
+      .toast.show {
+        opacity: 1;
+      }
+
+      @media (max-width: 600px) {
+        .plan-body {
+          grid-template-columns: 1fr;
+        }
+        .sidebar {
+          border-right: none;
+          border-bottom: 1px solid var(--border);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- HOME -->
+    <div class="screen active" id="home">
+      <div class="home-inner">
+        <div class="wordmark">Trials Signup</div>
+        <div>
+          <h1 class="home-title">Organize your<br /><em>trials.</em></h1>
+          <p class="home-sub" style="margin-top: 0.75rem">
+            Create a trial signup, share the code, and organize players into groups.
+          </p>
+        </div>
+        <div class="divider"></div>
+        <div class="home-actions">
+          <button class="btn-create" onclick="openCreateModal()">
+            + Create new plan
+          </button>
+          <div class="home-err" id="home-err"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXPIRED -->
+    <div class="screen" id="expired">
+      <div class="expired-inner">
+        <div class="expired-icon">⏱</div>
+        <h2 class="expired-title">Plan expired</h2>
+        <p class="expired-sub">
+          This plan has expired and is no longer accessible. Plans are
+          automatically deleted 4 hours after creation.
+        </p>
+        <button
+          class="btn-create"
+          style="margin-top: 0.5rem"
+          onclick="goHome()"
+        >
+          ← Back to home
+        </button>
+      </div>
+    </div>
+
+    <!-- PLAN -->
+    <div class="screen" id="plan">
+      <div class="plan-header">
+        <span class="plan-wordmark">Trials Signup</span>
+        <button class="btn-sm" onclick="showShare()" style="font-family:var(--mono);letter-spacing:.05em">
+          Share link
+        </button>
+        <span class="spacer"></span>
+        <a class="btn-sm" href="/" style="text-decoration:none">Home</a>
+      </div>
+      <div class="plan-body">
+        <div class="sidebar">
+          <div class="pool-add">
+            <input
+              id="signup-name"
+              type="text"
+              placeholder="EmbarkID#1234"
+              maxlength="20"
+              onkeydown="if(event.key==='Enter')joinPool()"
+            />
+            <button onclick="joinPool()">+</button>
+          </div>
+          <div class="signup-err" id="signup-err"></div>
+          <div class="sidebar-label" id="signups-label" style="display:none">Sign Ups</div>
+          <div
+            class="pool-list"
+            id="pool-list"
+            ondragover="event.preventDefault()"
+            ondrop="onRosterDrop(event)"
+          ></div>
+          <div class="unassigned-note" id="unassigned-note"></div>
+        </div>
+        <div class="main-area">
+          <div id="plan-title-display" class="plan-title-display"></div>
+          <div class="groups-toolbar">
+            <span class="groups-label">Groups</span>
+            <div style="display:flex;gap:8px">
+              <button class="btn-sm green" onclick="addGroup()">+ Add group</button>
+            </div>
+          </div>
+          <div class="groups-grid" id="groups-grid"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NEW PLAN MODAL -->
+    <div class="modal-bg hidden" id="modal-newplan">
+      <div class="modal">
+        <div class="modal-title">Plan created ✓</div>
+        <div class="modal-sub">
+          Share this link with your squad. Anyone with it can join and manage groups.
+          <strong style="color: var(--warn)">Expires in 4 hours.</strong>
+        </div>
+        <div>
+          <div class="modal-sub" style="margin-bottom:6px;font-size:11px;letter-spacing:.05em;text-transform:uppercase">Join link</div>
+          <div class="share-link" id="newplan-link"></div>
+        </div>
+        <button class="btn-sm green" style="width:100%;justify-content:center;padding:10px"
+          onclick="copyText(document.getElementById('newplan-link').textContent.trim())">
+          Copy link
+        </button>
+
+        <div class="modal-btns">
+          <button class="btn-sm green" onclick="enterPlan()">
+            Open plan →
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SHARE MODAL -->
+    <div class="modal-bg hidden" id="modal-share">
+      <div class="modal">
+        <div class="modal-title">Share this plan</div>
+        <div class="modal-sub">Share this link with anyone who needs to join.</div>
+        <div class="share-link" id="share-link-display"></div>
+        <button class="btn-sm green" style="width:100%;justify-content:center;padding:10px"
+          onclick="copyText(planLink())">Copy link</button>
+
+
+        <div class="modal-btns">
+          <button class="btn-sm green" onclick="closeModal('modal-share')">
+            Done
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CREATE MODAL -->
+    <div class="modal-bg hidden" id="modal-create">
+      <div class="modal">
+        <div class="modal-title">New trial signup</div>
+        <div class="modal-sub">Give this trial a name so players know what they're signing up for.</div>
+        <input type="text" id="trial-title-input" placeholder="e.g. Melee Queen Dam - 1pm" maxlength="60"
+          onkeydown="if(event.key==='Enter')submitCreatePlan()">
+        <div class="modal-err" id="create-err"></div>
+        <div class="modal-btns">
+          <button class="btn-sm" onclick="closeModal('modal-create')">Cancel</button>
+          <button class="btn-sm green" onclick="submitCreatePlan()">Create →</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script type="module">
+      /*
+ ╔══════════════════════════════════════════════════════════════╗
+ ║  FIREBASE SETUP                                              ║
+ ║                                                              ║
+ ║  1. Replace FIREBASE_CONFIG below with your project config.  ║
+ ║     Firebase Console → Project Settings → Your apps → SDK   ║
+ ║                                                              ║
+ ║  2. Firestore security rules (Firebase Console →             ║
+ ║     Firestore Database → Rules):                             ║
+ ║                                                              ║
+ ║  rules_version = '2';                                        ║
+ ║  service cloud.firestore {                                   ║
+ ║    match /databases/{database}/documents {                   ║
+ ║      match /plans/{planId} {                                 ║
+ ║        allow read, write: if true;                           ║
+ ║      }                                                       ║
+ ║    }                                                         ║
+ ║  }                                                           ║
+ ║                                                              ║
+ ║  3. TTL auto-deletion (Google Cloud Console →                ║
+ ║     Firestore → your database → Time-to-live):               ║
+ ║     Collection group: plans                                  ║
+ ║     Field: expiresAt                                         ║
+ ║     (Firestore will auto-delete expired plans within 24hrs)  ║
+ ╚══════════════════════════════════════════════════════════════╝
+*/
+
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+      import {
+        getFirestore,
+        doc,
+        setDoc,
+        getDoc,
+        onSnapshot,
+        updateDoc,
+        deleteDoc,
+        Timestamp,
+      } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+      const FIREBASE_CONFIG = {
+        apiKey: "AIzaSyBmYjzn8Kzmqj-9fcAFwqUczWMRkbCEi3k",
+        authDomain: "arc-raiders-squad-tool.firebaseapp.com",
+        databaseURL:
+          "https://arc-raiders-squad-tool-default-rtdb.firebaseio.com",
+        projectId: "arc-raiders-squad-tool",
+        storageBucket: "arc-raiders-squad-tool.firebasestorage.app",
+        messagingSenderId: "13352530605",
+        appId: "1:13352530605:web:3fb5a88fab1c0807af4c24",
+        measurementId: "G-K7GDK3HPRB",
+      };
+
+      const PLAN_DURATION_MS = 4 * 60 * 60 * 1000; // 4 hours
+
+      const app = initializeApp(FIREBASE_CONFIG);
+      const db = getFirestore(app);
+
+      // ── STATE ────────────────────────────────────────────────────────────────────
+      let planId = null;
+      let drag = null; // { name, from: groupId|"roster", fromIdx: number|null }
+      let unsubscribe = null;
+      let localState = null;
+      let countdownInterval = null;
+
+      // ── UTILS ────────────────────────────────────────────────────────────────────
+      function randCode() {
+        return Math.random().toString(36).substring(2, 8).toUpperCase();
+      }
+      function esc(s) {
+        return String(s)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+      function planLink() {
+        return `${location.origin}${location.pathname}#${planId}`;
+      }
+
+      window.copyText = (text) => {
+        navigator.clipboard.writeText(text).then(() => toast("Copied!"));
+      };
+
+      function toast(msg) {
+        const el = document.getElementById("toast");
+        el.textContent = msg;
+        el.classList.add("show");
+        setTimeout(() => el.classList.remove("show"), 2000);
+      }
+
+      function closeModal(id) {
+        document.getElementById(id).classList.add("hidden");
+      }
+      window.closeModal = closeModal;
+
+      // ── EXPIRY ───────────────────────────────────────────────────────────────────
+      function isExpired(state) {
+        if (!state || !state.expiresAt) return false;
+        // Firestore Timestamp has .toMillis(), plain number is legacy
+        const ms = state.expiresAt.toMillis ? state.expiresAt.toMillis() : state.expiresAt;
+        return Date.now() > ms;
+      }
+
+      function startCountdown(expiresAt) {
+        // countdown display removed — expiry handled client-side via isExpired()
+      }
+
+      // ── SCREENS ──────────────────────────────────────────────────────────────────
+      function showScreen(id) {
+        document
+          .querySelectorAll(".screen")
+          .forEach((s) => s.classList.remove("active"));
+        document.getElementById(id).classList.add("active");
+      }
+
+      window.goHome = () => {
+        if (unsubscribe) {
+          unsubscribe();
+          unsubscribe = null;
+        }
+        if (countdownInterval) {
+          clearInterval(countdownInterval);
+          countdownInterval = null;
+        }
+        planId = null;
+        localState = null;
+        history.replaceState(null, "", location.pathname);
+        showScreen("home");
+      };
+
+      // ── HOME ─────────────────────────────────────────────────────────────────────
+      window.openCreateModal = () => {
+        document.getElementById("trial-title-input").value = "";
+        document.getElementById("create-err").textContent = "";
+        document.getElementById("modal-create").classList.remove("hidden");
+        setTimeout(() => document.getElementById("trial-title-input").focus(), 50);
+      };
+
+      window.submitCreatePlan = async () => {
+        const title = document.getElementById("trial-title-input").value.trim();
+        if (!title) { document.getElementById("create-err").textContent = "Enter a trial name."; return; }
+        closeModal("modal-create");
+        const code = randCode();
+        const expiresAt = Date.now() + PLAN_DURATION_MS;
+        const defaultState = {
+          title,
+          expiresAt: Timestamp.fromMillis(expiresAt),
+          players: [],
+          groups: [
+            { id: "g0", name: "Scoring Group", main: true, members: [] },
+            { id: "g1", name: "Support Group 1", main: false, members: [] },
+          ],
+          nextGroup: 2,
+        };
+        await setDoc(doc(db, "plans", code), defaultState);
+        planId = code;
+        document.getElementById("newplan-link").textContent = planLink();
+        document.getElementById("modal-newplan").classList.remove("hidden");
+      };
+
+      window.enterPlan = () => {
+        closeModal("modal-newplan");
+        history.replaceState(null, "", `#${planId}`);
+        openPlan();
+      };
+
+
+
+      function handleHash() {
+        const hash = location.hash.slice(1);
+        if (!hash) {
+          // No hash - go to home if not already there
+          if (unsubscribe) { unsubscribe(); unsubscribe = null; }
+          if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
+          planId = null; localState = null;
+          showScreen("home");
+          return;
+        }
+        if (hash === planId) return; // same plan, do nothing
+        // New plan link pasted - clean up current and load new
+        if (unsubscribe) { unsubscribe(); unsubscribe = null; }
+        planId = hash;
+        localState = null;
+        openPlan();
+      }
+
+      window.addEventListener("load", handleHash);
+      window.addEventListener("hashchange", handleHash);
+
+      // ── PLAN ─────────────────────────────────────────────────────────────────────
+      function openPlan() {
+        showScreen("plan");
+        applyMode();
+        subscribeToplan();
+      }
+
+      function updateTitleDisplay() {
+        const el = document.getElementById("plan-title-display");
+        if (!el || !localState || !localState.title) return;
+        el.innerHTML = "";
+        const nameSpan = document.createElement("span");
+        nameSpan.className = "title-name";
+        nameSpan.textContent = localState.title;
+        nameSpan.title = "Click to edit";
+        nameSpan.onclick = () => editTitleInline();
+        el.appendChild(nameSpan);
+        const editBtn = document.createElement("button");
+        editBtn.className = "title-edit-btn";
+        editBtn.textContent = "✎";
+        editBtn.title = "Edit";
+        editBtn.onclick = () => editTitleInline();
+        el.appendChild(editBtn);
+      }
+
+      window.editTitleInline = () => {
+        const el = document.getElementById("plan-title-display");
+        if (!el || el.querySelector("input")) return;
+        el.innerHTML = "";
+        const inp = document.createElement("input");
+        inp.type = "text"; inp.value = localState.title || ""; inp.maxLength = 60;
+        inp.placeholder = "Trial name";
+        inp.style.cssText = "flex:1;min-width:120px;font-size:inherit;font-weight:inherit;font-family:inherit;background:var(--surface2);border:1px solid var(--accent);border-radius:6px;outline:none;color:var(--text);padding:2px 8px";
+        inp.onkeydown = (e) => { if (e.key === "Enter") saveBtn.click(); if (e.key === "Escape") updateTitleDisplay(); };
+        el.appendChild(inp);
+        const saveBtn = document.createElement("button");
+        saveBtn.className = "btn-sm green"; saveBtn.textContent = "Save";
+        saveBtn.onclick = async () => {
+          const newTitle = inp.value.trim();
+          if (!newTitle) return;
+          localState.title = newTitle;
+          await updateDoc(doc(db, "plans", planId), { title: newTitle });
+          updateTitleDisplay();
+        };
+        el.appendChild(saveBtn);
+        const cancelBtn = document.createElement("button");
+        cancelBtn.className = "btn-sm"; cancelBtn.textContent = "Cancel";
+        cancelBtn.onclick = () => updateTitleDisplay();
+        el.appendChild(cancelBtn);
+        inp.focus(); inp.select();
+      };
+
+
+      function subscribeToplan() {
+        if (unsubscribe) unsubscribe();
+        const planRef = doc(db, "plans", planId);
+        unsubscribe = onSnapshot(planRef, (snap) => {
+          if (!snap.exists()) {
+            showScreen("expired");
+            return;
+          }
+          const data = snap.data();
+          if (isExpired(data)) {
+            showScreen("expired");
+            return;
+          }
+          localState = data;
+          // Firestore returns proper arrays, but normalize just in case
+          if (!localState.players) localState.players = [];
+          if (!localState.groups) localState.groups = [];
+          localState.groups = localState.groups.map(g => ({
+            ...g,
+            members: g.members || []
+          }));
+          startCountdown(localState.expiresAt);
+          render();
+        });
+      }
+
+      function maybeAddGroup() {
+        // Auto-add a new support group if the last group is full
+        const groups = localState.groups;
+        const lastGroup = groups[groups.length - 1];
+        const lastMembers = lastGroup ? (lastGroup.members || []) : [];
+        if (lastMembers.length >= 3) {
+          const supportIdx = groups.filter(g => !g.main).length + 1;
+          const id = "g" + localState.nextGroup++;
+          localState.groups.push({
+            id,
+            name: "Support Group " + supportIdx,
+            main: false,
+            members: [],
+          });
+          return true;
+        }
+        return false;
+      }
+
+      async function saveState() {
+        maybeAddGroup();
+        await updateDoc(doc(db, "plans", planId), {
+          players: localState.players,
+          groups: localState.groups,
+          nextGroup: localState.nextGroup,
+        });
+      }
+
+      function applyMode() { render(); }
+
+      // ── SHARE ─────────────────────────────────────────────────────────────────────
+      window.showShare = () => {
+        document.getElementById("share-link-display").textContent = planLink();
+
+        document.getElementById("modal-share").classList.remove("hidden");
+      };
+
+      // ── PLAYER POOL ───────────────────────────────────────────────────────────────
+      window.joinPool = async () => {
+        const inp = document.getElementById("signup-name");
+        const err = document.getElementById("signup-err");
+        const name = inp.value.trim();
+        if (!name) {
+          err.textContent = "Enter your name.";
+          return;
+        }
+        if (!localState) return;
+        if (
+          localState.players
+            .map((p) => p.toLowerCase())
+            .includes(name.toLowerCase())
+        ) {
+          err.textContent = "Name already in pool.";
+          return;
+        }
+        err.textContent = "";
+        localState.players.push(name);
+        inp.value = "";
+        await saveState();
+      };
+
+      window.removePlayer = async (name) => {
+        localState.players = localState.players.filter((p) => p !== name);
+        localState.groups.forEach((g) => {
+          g.members = g.members.filter((m) => m !== name);
+        });
+        await saveState();
+      };
+
+      // ── GROUPS ────────────────────────────────────────────────────────────────────
+      window.addGroup = async () => {
+        const id = "g" + localState.nextGroup++;
+        localState.groups.push({
+          id,
+          name: "Support Group " + localState.groups.length,
+          main: false,
+          members: [],
+        });
+        await saveState();
+      };
+
+      window.removeLastGroup = async () => {
+        if (localState.groups.length <= 1) return;
+        localState.groups.pop();
+        await saveState();
+      };
+
+      window.resetPlan = async () => {
+        if (!confirm("Reset all groups and players?")) return;
+        localState.players = [];
+        localState.groups = [
+          { id: "g0", name: "Scoring Group", main: true, members: [] },
+          { id: "g1", name: "Support Group 1", main: false, members: [] },
+          { id: "g2", name: "Support Group 2", main: false, members: [] },
+        ];
+        localState.nextGroup = 3;
+        await saveState();
+      };
+
+      window.removeFromGroup = async (gid, name) => {
+        const g = localState.groups.find((x) => x.id === gid);
+        if (g) g.members = g.members.filter((m) => m !== name);
+        await saveState();
+      };
+
+      window.removeGroup = async (gid) => {
+        localState.groups = localState.groups.filter((g) => g.id !== gid);
+        // Renumber support groups sequentially
+        let supportIdx = 1;
+        localState.groups.forEach((g) => {
+          if (!g.main) {
+            g.name = "Support Group " + supportIdx++;
+          }
+        });
+        await saveState();
+      };
+
+      // ── DRAG & DROP ───────────────────────────────────────────────────────────────
+      window.onChipDragStart = (e, name, from, fromIdx) => {
+        drag = { name, from, fromIdx: fromIdx !== undefined ? fromIdx : null };
+        e.dataTransfer.effectAllowed = "move";
+        setTimeout(() => {
+          document.querySelectorAll(".chip,.slot.filled").forEach((el) => {
+            const nm = el.querySelector(".chip-name,.slot-name");
+            if (nm && nm.textContent === name) el.classList.add("dragging");
+          });
+        }, 0);
+      };
+      window.onDragEnd = () => {
+        drag = null;
+        document
+          .querySelectorAll(".dragging")
+          .forEach((el) => el.classList.remove("dragging"));
+      };
+      window.onGroupDragOver = (e, gid) => {
+        e.preventDefault();
+        document.getElementById("gc-" + gid)?.classList.add("drag-over");
+      };
+      window.onSlotDragOver = (e, gid, idx) => {
+        e.preventDefault();
+        e.stopPropagation();
+        document.querySelectorAll(".slot.drag-over-slot").forEach(el => el.classList.remove("drag-over-slot"));
+        const card = document.getElementById("gc-" + gid);
+        if (card) {
+          const slots = card.querySelectorAll(".slot");
+          if (slots[idx]) slots[idx].classList.add("drag-over-slot");
+        }
+      };
+      window.onSlotDragLeave = (e) => {
+        if (!e.currentTarget.contains(e.relatedTarget)) {
+          e.currentTarget.classList.remove("drag-over-slot");
+        }
+      };
+      window.onGroupDragLeave = (_, gid) => {
+        document.getElementById("gc-" + gid)?.classList.remove("drag-over");
+      };
+      window.onGroupDrop = async (e, gid, toIdx) => {
+        e.preventDefault();
+        document.getElementById("gc-" + gid)?.classList.remove("drag-over");
+        document.querySelectorAll(".slot.drag-over-slot").forEach(el => el.classList.remove("drag-over-slot"));
+        if (!drag) return;
+        const target = localState.groups.find((g) => g.id === gid);
+        if (!target) return;
+        const tMembers = target.members;
+
+        // Same group reorder: swap by index
+        if (drag.from === gid && drag.fromIdx !== null && toIdx !== undefined) {
+          if (drag.fromIdx === toIdx) { drag = null; return; }
+          const displaced = tMembers[toIdx] || null;
+          tMembers[toIdx] = drag.name;
+          if (displaced !== null) tMembers[drag.fromIdx] = displaced;
+          else tMembers.splice(drag.fromIdx, 1);
+          target.members = tMembers.filter(Boolean);
+          drag = null;
+          await saveState();
+          return;
+        }
+
+        // Cross-group or from roster: place into specific slot or push
+        if (toIdx !== undefined && tMembers[toIdx]) {
+          // Swap: put dragged into toIdx, send displaced back to source
+          const displaced = tMembers[toIdx];
+          tMembers[toIdx] = drag.name;
+          if (drag.from !== "roster") {
+            const src = localState.groups.find((g) => g.id === drag.from);
+            if (src) {
+              if (drag.fromIdx !== null) src.members[drag.fromIdx] = displaced;
+              else src.members = src.members.filter(m => m !== drag.name).concat(displaced);
+              src.members = src.members.filter(Boolean);
+            }
+          }
+        } else {
+          // Drop onto empty slot or card body
+          if (tMembers.includes(drag.name)) { drag = null; return; }
+          if (tMembers.length >= 3) { drag = null; return; }
+          if (drag.from !== "roster") {
+            const src = localState.groups.find((g) => g.id === drag.from);
+            if (src) src.members = src.members.filter((m) => m !== drag.name);
+          }
+          if (toIdx !== undefined) tMembers[toIdx] = drag.name;
+          else tMembers.push(drag.name);
+        }
+        target.members = tMembers.filter(Boolean);
+        drag = null;
+        await saveState();
+      };
+      window.onRosterDrop = async (e) => {
+        e.preventDefault();
+        if (!drag || drag.from === "roster") return;
+        const src = localState.groups.find((g) => g.id === drag.from);
+        if (src) src.members = src.members.filter((m) => m !== drag.name);
+        drag = null;
+        await saveState();
+      };
+
+      // ── COPY SLOT NAME ───────────────────────────────────────────────────────────
+      window.copySlotName = (name, el) => {
+        navigator.clipboard.writeText(name).then(() => {
+          const btn = el.classList.contains("copy-name-btn")
+            ? el
+            : el.parentElement && el.parentElement.querySelector(".copy-name-btn");
+          if (btn) {
+            btn.textContent = "Copied!";
+            btn.classList.add("copied");
+            setTimeout(() => {
+              btn.textContent = "Copy";
+              btn.classList.remove("copied");
+            }, 1200);
+          }
+        });
+      };
+
+      // ── RENDER ────────────────────────────────────────────────────────────────────
+      function render() {
+        if (!localState) return;
+        updateTitleDisplay();
+        renderPool();
+        renderGroups();
+      }
+
+      function assignedSet() {
+        return new Set(localState.groups.flatMap((g) => g.members));
+      }
+
+      function renderPool() {
+        const assigned = assignedSet();
+        const el = document.getElementById("pool-list");
+        el.innerHTML = localState.players.length
+          ? localState.players.map((name) => {
+              const isAssigned = assigned.has(name);
+              const canDrag = !isAssigned;
+              return `<div class="chip${canDrag ? " draggable" : ""}${isAssigned ? " assigned" : ""}"
+                ${canDrag ? `draggable="true" ondragstart="onChipDragStart(event,'${esc(name)}','roster')" ondragend="onDragEnd()"` : ""}>
+                <span class="chip-dot"></span>
+                <span class="chip-name">${esc(name)}</span>
+                <button class="chip-rm" onclick="removePlayer('${esc(name)}')" aria-label="Remove">✕</button>
+              </div>`;
+            }).join("")
+          : '<div style="font-size:12px;color:var(--muted);padding:4px 0">No sign-ups yet</div>';
+        const unassigned = localState.players.filter((p) => !assigned.has(p)).length;
+        document.getElementById("unassigned-note").textContent = unassigned ? `${unassigned} unassigned` : "";
+        const signupsLabel = document.getElementById("signups-label");
+        if (signupsLabel) signupsLabel.style.display = localState.players.length ? "block" : "none";
+      }
+
+      function renderGroups() {
+        const grid = document.getElementById("groups-grid");
+        grid.innerHTML = localState.groups.map((g) => {
+          const members = g.members || [];
+          const full = members.length >= 3;
+          const slots = [0, 1, 2].map((i) => members[i] || null);
+          return `<div class="group-card${full ? " full" : ""}" id="gc-${g.id}"
+            ondragover="onGroupDragOver(event,'${g.id}')" ondragleave="onGroupDragLeave(event,'${g.id}')" ondrop="onGroupDrop(event,'${g.id}')">
+            <div class="gc-header">
+              <span class="gc-name">${esc(g.name)}</span>
+              <div style="display:flex;align-items:center;gap:6px">
+                <span class="gc-count">${members.length}/3</span>
+                ${!g.main ? `<button class="chip-rm" onclick="removeGroup('${g.id}')" aria-label="Remove group" title="Remove group">✕</button>` : ""}
+              </div>
+            </div>
+            <div class="slot-list">
+              ${slots.map((m, i) => m
+                ? `<div class="slot filled draggable"
+                    draggable="true"
+                    ondragstart="onChipDragStart(event,'${esc(m)}','${g.id}',${i})"
+                    ondragend="onDragEnd()"
+                    ondragover="onSlotDragOver(event,'${g.id}',${i})"
+                    ondragleave="onSlotDragLeave(event)"
+                    ondrop="onGroupDrop(event,'${g.id}',${i})">
+                    <span class="slot-name" onclick="copySlotName('${esc(m)}', this)">${esc(m)}</span>
+                    <button class="copy-name-btn" onclick="copySlotName('${esc(m)}', this)" aria-label="Copy name">Copy</button>
+                    <span style="flex:1"></span>
+                    <button class="slot-rm" onclick="removeFromGroup('${g.id}','${esc(m)}')" aria-label="Remove">✕</button>
+                  </div>`
+                : `<div class="slot empty"
+                    ondragover="onSlotDragOver(event,'${g.id}',${i})"
+                    ondragleave="onSlotDragLeave(event)"
+                    ondrop="onGroupDrop(event,'${g.id}',${i})">open slot</div>`
+              ).join("")}
+            </div>
+            ${full ? '<div class="full-label">✓ full</div>' : ""}
+          </div>`;
+        }).join("");
+      }
+    </script>
+  </body>
+</html>
